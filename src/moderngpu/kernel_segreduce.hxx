@@ -203,6 +203,7 @@ void segreduce(input_it input, int count, segments_it segments,
       arch_52_cta<128, 11, 8>
     >
   >::type_t launch_t;
+  typedef typename std::iterator_traits<segments_it>::value_type int_t;
 
   cta_dim_t cta_dim = launch_t::cta_dim(context);
   int num_ctas = cta_dim.num_ctas(count + num_segments);
@@ -212,9 +213,9 @@ void segreduce(input_it input, int count, segments_it segments,
   type_t* carry_out_data = carry_out.data();
   int* codes_data = codes.data();
 
-  mem_t<int> mp = load_balance_partitions(count, segments, num_segments,
+  mem_t<int_t> mp = load_balance_partitions(count, segments, num_segments,
     cta_dim.nv(), context);
-  const int* mp_data = mp.data();
+  const int_t* mp_data = mp.data();
 
   auto k_reduce = [=]MGPU_DEVICE(int tid, int cta) {
     typedef typename launch_t::sm_ptx params_t;
