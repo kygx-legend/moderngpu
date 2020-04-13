@@ -58,7 +58,7 @@ struct context_t {
 
   // Alloc GPU memory.
   virtual void* alloc(size_t size, memory_space_t space) = 0;
-  virtual void free(void* p, memory_space_t space) = 0;
+  virtual void free(void* p, size_t sz, memory_space_t space) = 0;
 
   // cudaStreamSynchronize or cudaDeviceSynchronize for stream 0.
   virtual void synchronize() = 0;
@@ -130,7 +130,7 @@ public:
     return p;    
   }
 
-  virtual void free(void* p, memory_space_t space) {
+  virtual void free(void* p, size_t sz, memory_space_t space) {
     if(p) {
       cudaError_t result = (memory_space_device == space) ? 
         cudaFree(p) :
@@ -199,7 +199,7 @@ public:
   }
 
   ~mem_t() {
-    if(_context && _pointer) _context->free(_pointer, _space);
+    if(_context && _pointer) _context->free(_pointer, sizeof(type_t) * _size, _space);
     _pointer = nullptr;
     _size = 0;
   }
