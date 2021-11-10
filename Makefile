@@ -4,8 +4,7 @@
 # Generate SASS for important minor versions.
 # Generate PTX for the last named architecture for future support.
 ARCH=\
-  -gencode arch=compute_61,code=compute_61 \
-  -gencode arch=compute_61,code=sm_70
+  -gencode arch=compute_86,code=sm_86
 
 OPTIONS=-std=c++11 -Xcompiler="-Wundef" -O2 -g -lineinfo  --expt-extended-lambda -use_fast_math -Xptxas="-v" -I src
 
